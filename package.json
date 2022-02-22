@@ -4,12 +4,13 @@
   "description": "Demo socket server to emulate terminal",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "node-pty": "^0.10.1",
     "socket.io": "^4.4.1"
   },
   "devDependencies": {
