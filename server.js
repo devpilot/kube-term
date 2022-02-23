@@ -21,7 +21,8 @@ io.on("connection", (socket) => {
         cwd: process.env.HOME,
         env: process.env
     });
-    ptyProcess.on('data', function (data) {
+
+    ptyProcess.onData(data => {
         // process.stdout.write(data);
         socket.emit('resp', data)
     });
@@ -29,8 +30,9 @@ io.on("connection", (socket) => {
     socket.on('keystroke', data => {
         ptyProcess.write(data);
     });
-   socket.on('disconnect',reason => {
-       console.log(reason, socket.id);
+
+    socket.on('disconnect', reason => {
+        console.log(reason, socket.id);
         ptyProcess.kill();
-   });
+    });
 });
