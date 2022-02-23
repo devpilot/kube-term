@@ -14,8 +14,8 @@ io.on("connection", (socket) => {
     console.log('New connection:', socket.id);
 
     // init shell process
-    const ptyProcess = pty.spawn(shell, [], {
-        name: 'xterm-color',
+    const ptyProcess = pty.spawn(shell, ["./pty.sh"], {
+        name: 'xterm-256color',
         cols: 80,
         rows: 30,
         cwd: process.env.HOME,
@@ -34,5 +34,9 @@ io.on("connection", (socket) => {
     socket.on('disconnect', reason => {
         console.log(reason, socket.id);
         ptyProcess.kill();
+    });
+
+    ptyProcess.onExit(e => {
+        console.log(e);
     });
 });
