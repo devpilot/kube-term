@@ -1,13 +1,30 @@
+const express = require("express");
+const { createServer } = require("http");
 const { Server } = require("socket.io");
 const os = require('os');
 const pty = require('node-pty');
 
 const shell = os.platform() === 'win32' ? 'powershell.exe' : 'bash';
 
+const app = express();
+const httpServer = createServer(app);
+
 // init socket.io connection
-const io = new Server(3444, {
+const io = new Server(httpServer, {
     cors: '*'
 });
+
+// serve index file
+app.get('/', function (req, res) {
+    res.sendFile(__dirname + '/index.html');
+});
+
+// Expose the node_modules folder as static resources
+app.use('/xterm', express.static('node_modules/xterm'));
+app.use('/socket.io', express.static('node_modules/socket.io/client-dist'));
+
+// The server should start listening
+httpServer.listen(3443, '0.0.0.0', () => console.log('Server started on http:// 0.0.0.0:3443'));
 
 // listen for connection
 io.on("connection", (socket) => {
@@ -16,7 +33,7 @@ io.on("connection", (socket) => {
     // init shell process
     const ptyProcess = pty.spawn(shell, ["./pty.sh"], {
         name: 'xterm-256color',
-        cols: 80,
+        cols: 120,
         rows: 30,
         cwd: process.env.HOME,
         env: process.env
