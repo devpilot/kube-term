@@ -31,9 +31,14 @@ io.on("connection", (socket) => {
     console.log('New connection:', socket.id);
 
     // init shell process
-    const ptyProcess = pty.spawn(shell, ["./pty.sh"], {
+    const ptyProcess = pty.spawn(shell,
+        [
+            "./pty.sh",
+            socket.handshake.query.user || '',
+            socket.handshake.query.host || ''
+        ], {
         name: 'xterm-256color',
-        cols: 120,
+        cols: 100,
         rows: 30,
         cwd: process.env.HOME,
         env: process.env
