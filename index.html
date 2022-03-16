@@ -6,7 +6,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/xterm/css/xterm.css" />
-    <script src="/socket.io/socket.io.min.js"></script>
     <script src="/xterm/lib/xterm.js"></script>
     <title>VM Terminal</title>
 </head>
@@ -15,17 +14,11 @@
     <div id="container"></div>
     <script>
         // init socket connection
-        const socket = io({
-            transports: ["websocket"],
-            query: {
-                user: '',
-                host: ''
-            }
-        })
+        const ws = new WebSocket("ws://192.168.100.103:3443/")
 
-        socket.on('connect', () => {
-            console.info('Connected ', socket.id);
-        });
+        ws.onopen = e => {
+            console.info('Connected', e);
+        };
 
         const term = new Terminal({
             cursorBlink: true,
@@ -34,14 +27,18 @@
         });
 
         term.open(document.getElementById('container'));
+        term.element.style.padding = "5px";
+        term.focus();
 
-        socket.on('resp', data => {
-            term.write(data)
+        ws.onmessage = e => {
+            term.write(e.data)
+        };
+
+        term.onData(data => {
+            ws.send(data);
         });
 
-        term.onData((data) => {
-            socket.emit("keystroke", data);
-        });
+        ws.onerror = e => console.log('ws connection error ', e)
 
     </script>
 </body>
