@@ -14,10 +14,11 @@
     <div id="container"></div>
     <script>
         // init socket connection
-        const ws = new WebSocket("ws://192.168.100.103:3443/")
+        const ws = new WebSocket("ws://192.168.100.103:3444/")
 
         ws.onopen = e => {
             console.info('Connected', e);
+            ws.send('eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJkQlN3Y1pZeUE5dFRLWUU2QVRkR0FERFZtVl9oMm51UzFtZVF4UDh4bG1BIn0.eyJleHAiOjE2NDc1MjEwMDUsImlhdCI6MTY0NzUyMDcwNSwiYXV0aF90aW1lIjoxNjQ3NDkxMTY4LCJqdGkiOiIwZWZlODU1OC0zMWZkLTRiZDEtOGY5ZC00N2M5ZTM4NDJjYzgiLCJpc3MiOiJodHRwOi8vMTkyLjE2OC4xMDAuMTAzOjMxMjAyL2F1dGgvcmVhbG1zL2t1YmVndWFyZGlhbiIsImF1ZCI6Imt1YmVndWFyZGlhbiIsInN1YiI6IjA2ODdiOTA1LTlkZDAtNDQ3NC05MzQ3LTNkYjhhNWRlNTQ0OCIsInR5cCI6IklEIiwiYXpwIjoia3ViZWd1YXJkaWFuIiwibm9uY2UiOiIxOTMzMjEyMC0yZWZhLTQwYmMtODI4Mi01MzZjMzQ5ZTM4YWIiLCJzZXNzaW9uX3N0YXRlIjoiNGE1YmUwZWItOGM0OS00YTNmLTgxMGEtMmZmZjhjY2M0MmZhIiwiYXRfaGFzaCI6IlpCSV9fZ0pQMFFVUHNyRHhRVGtMT1EiLCJhY3IiOiIwIiwic2lkIjoiNGE1YmUwZWItOGM0OS00YTNmLTgxMGEtMmZmZjhjY2M0MmZhIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJuYW1lIjoiS3ViZWd1YXJkaWFuIEFkbWluIiwicHJlZmVycmVkX3VzZXJuYW1lIjoia2dhZG1pbiIsImdpdmVuX25hbWUiOiJLdWJlZ3VhcmRpYW4iLCJmYW1pbHlfbmFtZSI6IkFkbWluIn0.Duq07ZyP0Ub308T49z0SkwOoaROxY6zNtY3dtrpVK76H4svh5jVQWrnAXgFTyfpxat91DLtgg8o4x4v4fba_SQZq1bjcVWPiHxrEOFoR5CqQoPSixx6V1oOUSxxibK8psW1Jh5yNFSecUM0lT7nJv7tY-G76h9cT0vKLiOmrcV45Gggm3T_OYDm6wqeRjREpOnq18MBsbBzV_40yOeAKTHEI7iLo72vBG3PRQ8V46Uk6Gn-Zn26pPLE6qprQaBDHHbpqOCFsUZbD9f9DWckR9wbVmkpVPKkaN9ZskYy-vomvFwwmIHC1FHI1ifFWX2OC4LLQ6y3lhwPBY_SVSXsskg')
         };
 
         const term = new Terminal({
@@ -39,7 +40,11 @@
         });
 
         ws.onerror = e => console.log('ws connection error ', e)
-
+        ws.onclose = e => {
+            term.reset()
+            term.write('Connection close')
+            console.log('Connection close ', e)
+        }
     </script>
 </body>
 
