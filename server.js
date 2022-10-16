@@ -19,7 +19,6 @@ app.get('/', function (req, res) {
 
 // Expose the node_modules folder as static resources
 app.use('/xterm', express.static('node_modules/xterm'));
-// app.use('/socket.io', express.static('node_modules/socket.io/client-dist'));
 
 // The server should start listening
 server.listen(3444, '0.0.0.0', () => console.log('Server started on http:// 0.0.0.0:3444'));
@@ -29,8 +28,7 @@ wss.on("connection", (ws, req) => {
     console.log('New connection: ', req.socket.remoteAddress);
 
     // init shell process
-    const ptyProcess = pty.spawn(shell,
-        ["./pty.sh"], {
+    const ptyProcess = pty.spawn("rlwrap", ["-H", "/tmp/command_history", "./pty.sh", "john", "supercomputer", "config"], {
         name: 'xterm-256color',
         cols: 100,
         rows: 30,
